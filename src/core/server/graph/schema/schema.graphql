@@ -3612,7 +3612,7 @@ type Story {
   rating is the rating that the viewer has already added to a comment on this
   story.
   """
-  rating: Int
+  viewerRating: Int
 }
 
 """
