@@ -3609,9 +3609,10 @@ type Story {
   ratings: StoryRatings
 
   """
-  rated is true when the current viewer has already rated the given story.
+  rating is the rating that the viewer has already added to a comment on this
+  story.
   """
-  rated: Boolean
+  rating: Int
 }
 
 """
