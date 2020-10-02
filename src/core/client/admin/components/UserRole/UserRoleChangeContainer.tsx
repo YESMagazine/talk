@@ -15,7 +15,7 @@ import { UserRoleChangeContainer_user } from "coral-admin/__generated__/UserRole
 import { UserRoleChangeContainer_viewer } from "coral-admin/__generated__/UserRoleChangeContainer_viewer.graphql";
 
 import ButtonPadding from "../ButtonPadding";
-import UpdateUserModerationScopesMutation from "./UpdateUserModerationScopesMutation";
+import PromoteUserMutation from "./PromoteUserMutation";
 import UpdateUserRoleMutation from "./UpdateUserRoleMutation";
 import UserRoleChange from "./UserRoleChange";
 import UserRoleText from "./UserRoleText";
@@ -34,29 +34,8 @@ const UserRoleChangeContainer: FunctionComponent<Props> = ({
   query,
 }) => {
   const updateUserRole = useMutation(UpdateUserRoleMutation);
-  const updateUserModerationScopes = useMutation(
-    UpdateUserModerationScopesMutation
-  );
-  const handleOnChangeRole = useCallback(
-    async (role: GQLUSER_ROLE_RL) => {
-      if (role === user.role) {
-        // No role change is needed! User already has the selected role.
-        return;
-      }
+  const promoteUser = useMutation(PromoteUserMutation);
 
-      await updateUserRole({ userID: user.id, role });
-    },
-    [user, updateUserRole]
-  );
-  const handleOnChangeModerationScopes = useCallback(
-    async (siteIDs: string[]) => {
-      await updateUserModerationScopes({
-        userID: user.id,
-        moderationScopes: { siteIDs },
-      });
-    },
-    [user]
-  );
   const canChangeRole = useMemo(() => {
     return (
       viewer.id !== user.id &&
@@ -70,6 +49,26 @@ const UserRoleChangeContainer: FunctionComponent<Props> = ({
       settings.featureFlags.includes(GQLFEATURE_FLAG.SITE_MODERATOR) &&
       settings.multisite,
     [settings]
+  );
+
+  const handleOnChange = useCallback(
+    async (role: GQLUSER_ROLE_RL, siteIDs?: string[]) => {
+      // if moderation scopes are in play, we need to use the
+      // promote user mutation that will encapsulate the role
+      // changes and scope changes into one operation
+      if (moderationScopesEnabled && siteIDs?.length !== 0) {
+        await promoteUser({
+          role,
+          userID: user.id,
+          moderationScopes: { siteIDs },
+        });
+      }
+      // other wise we use the standard role policies
+      else {
+        await updateUserRole({ userID: user.id, role });
+      }
+    },
+    [user, moderationScopesEnabled, updateUserRole, promoteUser]
   );
 
   if (!canChangeRole) {
@@ -87,9 +86,8 @@ const UserRoleChangeContainer: FunctionComponent<Props> = ({
   return (
     <UserRoleChange
       username={user.username}
-      onChangeRole={handleOnChangeRole}
+      onChange={handleOnChange}
       viewerRole={viewer.role}
-      onChangeModerationScopes={handleOnChangeModerationScopes}
       role={user.role}
       scoped={user.moderationScopes?.scoped}
       moderationScopes={user.moderationScopes}

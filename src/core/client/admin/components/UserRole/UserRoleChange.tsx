@@ -22,8 +22,7 @@ import styles from "./UserRoleChange.css";
 
 interface Props {
   username: string | null;
-  onChangeRole: (role: GQLUSER_ROLE_RL) => Promise<void>;
-  onChangeModerationScopes: (siteIDs: string[]) => Promise<void>;
+  onChange: (role: GQLUSER_ROLE_RL, siteIDs?: string[]) => Promise<void>;
   role: GQLUSER_ROLE_RL;
   scoped?: boolean;
   moderationScopes: UserRoleChangeContainer_user["moderationScopes"];
@@ -38,8 +37,7 @@ const UserRoleChange: FunctionComponent<Props> = ({
   username,
   role,
   scoped,
-  onChangeRole,
-  onChangeModerationScopes,
+  onChange,
   moderationScopes,
   moderationScopesEnabled = false,
   query,
@@ -60,13 +58,13 @@ const UserRoleChange: FunctionComponent<Props> = ({
    */
   const handleChangeRole = useCallback(
     async (r: GQLUSER_ROLE_RL, siteIDs: string[] = []) => {
-      await onChangeRole(r);
-
       if (moderationScopesEnabled) {
-        await onChangeModerationScopes(siteIDs);
+        await onChange(r, siteIDs);
+      } else {
+        await onChange(r);
       }
     },
-    [onChangeRole, onChangeModerationScopes, moderationScopesEnabled]
+    [onChange, moderationScopesEnabled]
   );
   const onClick = useCallback(
     (r: GQLUSER_ROLE_RL, siteIDs: string[] = []) => async () => {

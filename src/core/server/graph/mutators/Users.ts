@@ -12,6 +12,7 @@ import {
   destroyModeratorNote,
   ignore,
   premod,
+  promoteUser,
   removeBan,
   removeIgnore,
   removePremod,
@@ -51,6 +52,7 @@ import {
   GQLIgnoreUserInput,
   GQLInviteUsersInput,
   GQLPremodUserInput,
+  GQLPromoteUserInput,
   GQLRemovePremodUserInput,
   GQLRemoveUserBanInput,
   GQLRemoveUserIgnoreInput,
@@ -223,12 +225,14 @@ export const Users = (ctx: GraphContext) => ({
   updateUserAvatar: async (input: GQLUpdateUserAvatarInput) =>
     updateAvatar(ctx.mongo, ctx.tenant, input.userID, input.avatar),
   updateUserRole: async (input: GQLUpdateUserRoleInput) =>
-    updateRole(
+    updateRole(ctx.mongo, ctx.tenant, ctx.user!, input.userID, input.role),
+  promoteUser: async (input: GQLPromoteUserInput) =>
+    promoteUser(
       ctx.mongo,
       ctx.tenant,
       ctx.user!,
-      input.userID,
       input.role,
+      input.userID,
       input.moderationScopes
     ),
   updateUserModerationScopes: async (
