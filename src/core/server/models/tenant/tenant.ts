@@ -353,8 +353,11 @@ export async function updateTenant(
       returnOriginal: false,
     }
   );
+  if (!result.value) {
+    throw new Error("tenant not found with id");
+  }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function enableTenantFeatureFlag(
@@ -377,8 +380,11 @@ export async function enableTenantFeatureFlag(
       returnOriginal: false,
     }
   );
+  if (!result.value) {
+    throw new Error("tenant not found with id");
+  }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function disableTenantFeatureFlag(
@@ -401,8 +407,11 @@ export async function disableTenantFeatureFlag(
       returnOriginal: false,
     }
   );
+  if (!result.value) {
+    throw new Error("tenant not found with id");
+  }
 
-  return result.value || null;
+  return result.value;
 }
 
 export interface CreateAnnouncementInput {

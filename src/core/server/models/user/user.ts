@@ -895,7 +895,7 @@ export async function updateUserPassword(
     throw new Error("an unexpected error occurred");
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function scheduleDeletionDate(
@@ -918,12 +918,11 @@ export async function scheduleDeletionDate(
       returnOriginal: false,
     }
   );
-
   if (!result.value) {
-    throw new Error("Unable to update user deletion date.");
+    throw new UserNotFoundError(userID);
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function clearDeletionDate(
@@ -948,12 +947,11 @@ export async function clearDeletionDate(
       returnOriginal: false,
     }
   );
-
   if (!result.value) {
-    throw new Error("Unable to update user deletion date.");
+    throw new UserNotFoundError(userID);
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 export interface UpdateUserInput {
@@ -1005,7 +1003,7 @@ export async function updateUserFromSSO(
     throw new Error("an unexpected error occurred");
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 /**
@@ -2361,7 +2359,7 @@ export async function resetUserPassword(
     throw new Error("an unexpected error occurred");
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function confirmUserEmail(
@@ -2410,7 +2408,7 @@ export async function confirmUserEmail(
     throw new Error("an unexpected error occurred");
   }
 
-  return result.value || null;
+  return result.value;
 }
 
 export async function ignoreUser(
@@ -2735,6 +2733,7 @@ export async function retrieveUserScheduledForDeletion(
       returnOriginal: false,
     }
   );
+
   return result.value || null;
 }
 
