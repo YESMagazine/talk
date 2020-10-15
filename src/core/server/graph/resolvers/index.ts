@@ -4,6 +4,7 @@ import Time from "coral-server/graph/scalars/time";
 
 import { GQLResolver } from "coral-server/graph/schema/__generated__/types";
 
+import { AkismetExternalIntegration } from "./AkismetExternalIntegration";
 import { ApproveCommentPayload } from "./ApproveCommentPayload";
 import { AuthIntegrations } from "./AuthIntegrations";
 import { BanStatus } from "./BanStatus";
@@ -21,6 +22,7 @@ import { CommentReplyCreatedPayload } from "./CommentReplyCreatedPayload";
 import { CommentRevision } from "./CommentRevision";
 import { CommentStatusUpdatedPayload } from "./CommentStatusUpdatedPayload";
 import { DisableCommenting } from "./DisableCommenting";
+import { EditInfo } from "./EditInfo";
 import { ExternalMediaConfiguration } from "./ExternalMediaConfiguration";
 import { ExternalModerationPhase } from "./ExternalModerationPhase";
 import { FacebookAuthIntegration } from "./FacebookAuthIntegration";
@@ -70,6 +72,7 @@ import { WebhookEndpoint } from "./WebhookEndpoint";
 import { YouTubeMediaConfiguration } from "./YouTubeMediaConfiguration";
 
 const Resolvers: GQLResolver = {
+  AkismetExternalIntegration,
   ApproveCommentPayload,
   StaffConfiguration,
   AuthIntegrations,
@@ -89,6 +92,7 @@ const Resolvers: GQLResolver = {
   CommentStatusUpdatedPayload,
   Cursor,
   DisableCommenting,
+  EditInfo,
   ExternalMediaConfiguration,
   ExternalModerationPhase,
   FacebookAuthIntegration,
